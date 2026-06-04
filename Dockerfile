@@ -7,8 +7,8 @@ WORKDIR /app
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 
-# Resolve all dependencies (cached layer unless pom.xml changes)
-RUN ./mvnw dependency:go-offline -B
+# Make mvnw executable and resolve all dependencies (cached layer unless pom.xml changes)
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 
 # Copy source and compile
 COPY src/ src/
@@ -24,3 +24,4 @@ COPY --from=build /app/target/invoice-generator-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
