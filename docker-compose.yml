@@ -1,0 +1,49 @@
+services:
+
+  postgres:
+    image: postgres:17
+
+    container_name: invoice-postgres
+
+    environment:
+      POSTGRES_DB: invoice_generator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+
+    container_name: invoice-backend
+
+    depends_on:
+      - postgres
+
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/invoice_generator
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+
+    ports:
+      - "8081:8081"
+
+  frontend:
+    build:
+      context: ./invoice-generator-ui
+
+    container_name: invoice-frontend
+
+    depends_on:
+      - backend
+
+    ports:
+      - "5173:5173"
+
+volumes:
+  postgres_data:
