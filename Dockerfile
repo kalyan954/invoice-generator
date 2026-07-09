@@ -11,7 +11,7 @@ COPY mvnw pom.xml ./
 RUN chmod +x ./mvnw
 
 # Resolve all dependencies (cached layer unless pom.xml changes)
-RUN ./mvnw dependency:go-offline -B
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 
 # Copy source and compile
 COPY src/ src/
